@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홍길동의 웹 포트폴리오</title>
+    <!-- Tailwind CSS CDN 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 커스텀 스타일 및 테마 정의 */
+        :root {
+            --primary-color: #3b82f6; /* Tailwind blue-500 */
+            --bg-dark: #1f2937;       /* Tailwind gray-800 */
+            --text-light: #f3f4f6;    /* Tailwind gray-100 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* 스크롤바 숨기기 (선택 사항) */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 섹션 제목 스타일 */
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 70%;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 9999px;
+        }
+
+        /* 프로젝트 카드 호버 효과 */
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* JavaScript로 활성화될 모달 스타일 */
+        .modal {
+            display: none; /* 초기에는 숨김 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 90%;
+            background-color: #ffffff;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #3b82f6;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 반응형 모달 컨텐츠 */
+        @media (min-width: 768px) {
+            .modal-content {
+                max-width: 700px;
+            }
+        }
+
+        /* 헤더 고정 및 스크롤 시 그림자 추가 */
+        .header-scrolled {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+
+    <!-- 1. 헤더/내비게이션 바 -->
+    <header id="main-header" class="bg-white p-4 sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-extrabold text-gray-900">
+                <a href="#home" class="text-blue-600 hover:text-blue-800 transition duration-300">K.I.M. Portfolio</a>
+            </h1>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">소개</a></li>
+                    <li><a href="#skills" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">기술</a></li>
+                    <li><a href="#projects" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">프로젝트</a></li>
+                    <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">연락처</a></li>
+                </ul>
+            </nav>
+            <!-- 모바일 메뉴 버튼 -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+        <!-- 모바일 메뉴 드롭다운 -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 bg-white rounded-lg shadow-lg">
+            <ul class="flex flex-col space-y-2 p-4">
+                <li><a href="#about" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">소개</a></li>
+                <li><a href="#skills" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">기술</a></li>
+                <li><a href="#projects" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">프로젝트</a></li>
+                <li><a href="#contact" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">연락처</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. 홈 섹션 (Hero Section) -->
+        <section id="home" class="bg-gray-50 py-20 md:py-32 flex items-center min-h-[60vh]">
+            <div class="container mx-auto px-6 text-center">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-3xl mx-auto">
+                    <!-- Placeholder Image for Profile -->
+                    <!-- <img src="https://placehold.co/150x150/3b82f6/ffffff?text=나" onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=Profile'" alt="프로필 이미지" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-200"> -->
+                    
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+                        안녕하세요, <span class="text-blue-600">프론트엔드 개발자</span> 김지환입니다.
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-8">
+                        HTML, CSS, JavaScript를 활용한 사용자 중심의 웹 경험을 만듭니다.
+                    </p>
+                    <a href="#projects" class="inline-block bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                        작품 보러가기 →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 소개 섹션 (About Me) -->
+        <section id="about" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title text-gray-900">About Me</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            저는 웹 개발에 대한 깊은 열정을 가진 개발자입니다. 특히 사용자 경험(UX)을 개선하고, 깔끔하며 효율적인 코드를 작성하는 것에 주력합니다. 
+                            이번 포트폴리오는 **HTML, CSS, JavaScript**라는 웹의 기본 기술을 완벽하게 숙달했음을 보여드리기 위해 직접 제작했습니다.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed">
+                            복잡한 문제에 직면했을 때, 체계적인 접근 방식으로 솔루션을 도출하는 것을 즐깁니다. 새로운 기술을 배우는 데 주저함이 없으며, 팀 프로젝트에서 시너지를 낼 수 있는 협업 능력을 중요하게 생각합니다.
+                        </p>
+                        <div class="mt-8 space-y-4">
+                            <div class="flex items-center">
+                                <span class="text-blue-600 font-bold mr-3">✔</span> 
+                                <span class="text-gray-800">HTML5와 CSS3에 대한 깊은 이해 및 숙련도</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-blue-600 font-bold mr-3">✔</span> 
+                                <span class="text-gray-800">Vanilla JavaScript를 활용한 동적 웹 구현 능력</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-blue-600 font-bold mr-3">✔</span> 
+                                <span class="text-gray-800">반응형 웹 디자인 (Mobile First 접근)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- About Section Placeholder Image -->
+                    <div class="hidden md:block bg-blue-50 p-6 rounded-xl shadow-inner">
+                        <img src="https://placehold.co/400x300/e0f2fe/1e40af?text=Developer+Workflow" alt="개발자 워크플로우 이미지" class="rounded-lg w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4. 기술 섹션 (Skills) -->
+        <section id="skills" class="py-20 md:py-28 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title text-gray-900">Skills</h2>
+                <p class="text-xl text-gray-600 mb-10">제가 주로 사용하는 기술 스택입니다.</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Skill Card: HTML -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
+                        <div class="text-5xl mb-3">🛠️</div>
+                        <h3 class="text-xl font-bold mb-2">HTML5</h3>
+                        <p class="text-gray-600">웹 표준 및 시맨틱 마크업</p>
+                    </div>
+                    <!-- Skill Card: CSS -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
+                        <div class="text-5xl mb-3">🎨</div>
+                        <h3 class="text-xl font-bold mb-2">CSS3</h3>
+                        <p class="text-gray-600">반응형, 애니메이션, Flexbox/Grid</p>
+                    </div>
+                    <!-- Skill Card: JavaScript -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
+                        <div class="text-5xl mb-3">🚀</div>
+                        <h3 class="text-xl font-bold mb-2">JavaScript</h3>
+                        <p class="text-gray-600">DOM 조작, 비동기 처리, ES6+</p>
+                    </div>
+                    <!-- Skill Card: Tooling -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
+                        <div class="text-5xl mb-3">✨</div>
+                        <h3 class="text-xl font-bold mb-2">Git / GitHub</h3>
+                        <p class="text-gray-600">버전 관리 및 협업</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 프로젝트 섹션 (Projects) -->
+        <section id="projects" class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title text-gray-900">Projects</h2>
+                <p class="text-xl text-gray-600 mb-10">직접 기획하고 개발한 주요 프로젝트들을 소개합니다.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Project Card 1: 협업형 투두 리스트 -->
+                    <div class="project-card bg-gray-50 rounded-xl shadow-lg overflow-hidden" data-project="project1">
+                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Collaborative+ToDo+App" onerror="this.src='https://placehold.co/600x400/3b82f6/ffffff?text=Collaborative+ToDo+App'" alt="협업형 투두 리스트 이미지" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">협업형 투두 리스트</h3>
+                            <p class="text-gray-600 mb-4">CRUD 기능과 팀원 간 소통 기능을 구현한 공동 작업 관리 앱입니다.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Vanilla JS</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">UX/UI</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Data Management</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2: 무한 반복 플레이리스트 -->
+                    <div class="project-card bg-gray-50 rounded-xl shadow-lg overflow-hidden" data-project="project2">
+                        <img src="https://placehold.co/600x400/10b981/ffffff?text=Music+Player+Demo" onerror="this.src='https://placehold.co/600x400/10b981/ffffff?text=Music+Player+Demo'" alt="무한 반복 플레이리스트 이미지" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">무한 반복 플레이리스트</h3>
+                            <p class="text-gray-600 mb-4">음악 추가 및 무한 반복 로직을 구현한 커스터마이징 가능한 웹 플레이어입니다.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Web Audio API</span>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">JS Logic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3: 푸드트럭 부스 선정 투표 시스템 -->
+                    <div class="project-card bg-gray-50 rounded-xl shadow-lg overflow-hidden" data-project="project3">
+                        <img src="https://placehold.co/600x400/ef4444/ffffff?text=Voting+System+Demo" onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Voting+System+Demo'" alt="푸드트럭 부스 선정 투표 시스템 이미지" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">푸드트럭 부스 선정 투표 시스템</h3>
+                            <p class="text-gray-600 mb-4">부스 위치를 정하고 사용자 투표를 통해 최적의 위치를 선정하는 시스템입니다.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Voting Logic</span>
+                                <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Dynamic UI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 연락처 섹션 (Contact) -->
+        <section id="contact" class="py-20 md:py-28 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="section-title text-gray-900">Contact</h2>
+                <p class="text-xl text-gray-600 mb-10">함께 멋진 프로젝트를 만들어가고 싶습니다. 언제든지 연락 주세요!</p>
+
+                <div class="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto">
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-blue-600 text-2xl">📧</span>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">이메일</h3>
+                                <a href="mailto:jihwan0204191@naver.com" class="text-gray-600 hover:text-blue-600 transition duration-300">jihwan0204191@naver.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-blue-600 text-2xl">🔗</span>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">GitHub</h3>
+                                <a href="https://github.com/your-username" target="_blank" class="text-gray-600 hover:text-blue-600 transition duration-300">github.com/Arcanaa</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-blue-600 text-2xl">📝</span>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">블로그/노션</h3>
+                                <a href="https://www.notion.so/111fc806e920801c8890e8952f11829f" target="_blank" class="text-gray-600 hover:text-blue-600 transition duration-300">jihwan0204191</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 7. 푸터 -->
+    <footer class="bg-gray-800 py-8">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <p>&copy; 2025 kim jihwan Portfolio. All rights reserved.</p>
+            <p class="text-sm mt-2">Built with HTML, CSS (Tailwind), JavaScript.</p>
+        </div>
+    </footer>
+
+    <!-- 프로젝트 상세 정보 모달 (JavaScript로 내용 채움) -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-body">
+                <!-- Project details will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 로직 -->
+    <script>
+        // 프로젝트 데이터 (JSON 형태로 상세 정보 관리)
+        const projectsData = {
+            project1: {
+                title: "협업형 투두 리스트 (팀 소통 기능)",
+                image: "https://placehold.co/600x400/3b82f6/ffffff?text=Collaborative+ToDo+App+Demo",
+                tech: "HTML5, CSS3, Vanilla JavaScript",
+                duration: "3주",
+                role: "기획, UI/UX 디자인, 프론트엔드 개발 100%",
+                description: `
+                    <p class="mb-4">개인 투두 관리를 넘어 팀원 간의 작업 공유와 소통을 지원하도록 기능을 확장한 반응형 웹 애플리케이션입니다. 사용자 경험(UX) 개선에 집중했습니다.</p>
+                    <h4 class="font-semibold mt-4 mb-2">주요 기능</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">
+                        <li>할 일 추가/수정/삭제 (CRUD)</li>
+                        <li>**팀원 별 할 일 할당 및 상태 공유 기능** 구현</li>
+                        <li>**간단한 댓글 또는 메모 추가**를 통한 팀원 간의 소통 지원</li>
+                        <li>사용자 인증을 가정한 데이터 분리 및 관리 로직 구현</li>
+                    </ul>
+                    <h4 class="font-semibold mt-4 mb-2">배운 점</h4>
+                    <p class="text-gray-700">다중 사용자 환경을 가정한 데이터 구조 설계와, 복잡한 사용자 상호 작용을 효율적으로 처리하는 JavaScript 디자인 패턴을 적용했습니다.</p>
+                `
+            },
+            project2: {
+                title: "무한 반복 플레이리스트",
+                image: "https://placehold.co/600x400/10b981/ffffff?text=Music+Player+Demo",
+                tech: "HTML, CSS Animation, JavaScript (Web Audio API or Audio Object)",
+                duration: "2주",
+                role: "전체 개발",
+                description: `
+                    <p class="mb-4">사용자가 원하는 음악(mp3 등 로컬 파일 가정)을 추가하여 관리하고, 순차적 또는 무한 반복 재생할 수 있는 커스터마이징 가능한 웹 플레이어입니다.</p>
+                    <h4 class="font-semibold mt-4 mb-2">주요 기능</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">
+                        <li>음악 파일 추가 및 리스트 관리 (Drag & Drop UI)</li>
+                        <li>재생/일시정지, 다음/이전 곡 이동</li>
+                        <li>**플레이리스트 무한 반복 및 셔플(Shuffle)** 재생 로직 구현</li>
+                        <li>진행률 바(Progress Bar) 및 볼륨 제어 UI</li>
+                    </ul>
+                    <h4 class="font-semibold mt-4 mb-2">배운 점</h4>
+                    <p class="text-gray-700">HTML5 Audio 객체를 이용한 미디어 제어 방법과, 사용자 정의 UI/UX를 미디어 기능과 동기화하는 JavaScript 로직을 깊이 있게 다루었습니다.</p>
+                `
+            },
+            project3: {
+                title: "푸드트럭 부스 선정 투표 시스템",
+                image: "https://placehold.co/600x400/ef4444/ffffff?text=Voting+System+Demo",
+                tech: "HTML, CSS (Geo-location UI), JavaScript (Voting Logic)",
+                duration: "2주",
+                role: "기획 및 프론트엔드 구현",
+                description: `
+                    <p class="mb-4">축제나 행사장에서 푸드트럭의 최적 부스 위치를 선정하기 위해 사용자들이 직접 투표할 수 있도록 설계된 웹 시스템의 프론트엔드 구현 프로젝트입니다.</p>
+                    <h4 class="font-semibold mt-4 mb-2">주요 기능</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">
+                        <li>**가상 부스 위치 지도 UI** 표시 및 선택 기능</li>
+                        <li>각 부스에 대한 **투표 기능** (중복 투표 방지 로직 가정)</li>
+                        <li>**실시간 투표 결과 업데이트** 및 순위 표시</li>
+                        <li>투표 마감 후 최종 선정 부스 애니메이션 표시</li>
+                    </ul>
+                    <h4 class="font-semibold mt-4 mb-2">배운 점</h4>
+                    <p class="text-gray-700">데이터 변화에 따라 사용자 인터페이스(UI)를 동적으로 업데이트하는 반응형 프로그래밍 패턴을 연습했으며, 공정한 투표 시스템 로직을 구축하는 방법을 이해했습니다.</p>
+                `
+            }
+        };
+
+        // DOM 요소 가져오기
+        const modal = document.getElementById('projectModal');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+        const mainHeader = document.getElementById('main-header');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // 1. 헤더 스크롤 이벤트 (그림자 추가)
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                mainHeader.classList.add('header-scrolled');
+            } else {
+                mainHeader.classList.remove('header-scrolled');
+            }
+        });
+
+        // 2. 모바일 메뉴 토글
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 모바일 메뉴 링크 클릭 시 메뉴 닫기 (사용자 편의성)
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 3. 모달 열기 함수
+        function openModal(projectId) {
+            const data = projectsData[projectId];
+            if (!data) return;
+
+            // 모달 내용 생성
+            modalBody.innerHTML = `
+                <h2 class="text-3xl font-extrabold text-blue-600 mb-4">${data.title}</h2>
+                <img src="${data.image}" alt="${data.title} 데모 이미지" class="w-full h-auto rounded-lg mb-4 object-cover border border-gray-200">
+                <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+                    <div>
+                        <span class="font-semibold text-gray-700">사용 기술:</span> ${data.tech}
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-700">기간:</span> ${data.duration}
+                    </div>
+                    <div class="col-span-2">
+                        <span class="font-semibold text-gray-700">역할:</span> ${data.role}
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">프로젝트 상세</h3>
+                <div class="text-gray-800 leading-relaxed">${data.description}</div>
+                <div class="mt-6 text-center">
+                    <!-- 실제 링크로 교체 필요 -->
+                    <a href="#" target="_blank" class="inline-block bg-blue-600 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 mr-4">
+                        🌐 데모 보기
+                    </a>
+                    <a href="#" target="_blank" class="inline-block bg-gray-700 text-white font-medium py-2 px-6 rounded-lg hover:bg-gray-800 transition duration-300">
+                        💻 GitHub
+                    </a>
+                </div>
+            `;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // 스크롤 잠금
+        }
+
+        // 4. 모달 닫기 함수
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = ''; // 스크롤 해제
+        }
+
+        // 5. 프로젝트 카드 클릭 이벤트 리스너 설정
+        projectCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const projectId = card.getAttribute('data-project');
+                openModal(projectId);
+            });
+        });
+
+        // 6. 닫기 버튼 (X) 클릭 이벤트
+        closeBtn.addEventListener('click', closeModal);
+
+        // 7. 모달 바깥 영역 클릭 이벤트 (모달 닫기)
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 8. 키보드 ESC 키로 모달 닫기
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                closeModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
