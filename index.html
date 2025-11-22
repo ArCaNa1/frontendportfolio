@@ -3,506 +3,464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>홍길동의 웹 포트폴리오</title>
+    <title>개발자 김지환 웹 CV</title>
     <!-- Tailwind CSS CDN 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* 커스텀 스타일 및 테마 정의 */
         :root {
-            --primary-color: #3b82f6; /* Tailwind blue-500 */
-            --bg-dark: #1f2937;       /* Tailwind gray-800 */
-            --text-light: #f3f4f6;    /* Tailwind gray-100 */
+            --primary-color: #06b6d4; /* 청록색 계열로 변경하여 현대적인 느낌 강조 */
+            --bg-light: #ffffff;      
+            --text-dark: #1f2937;     
+            --secondary-text: #6b7280;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
+            background-color: #e5e7eb; /* 연한 회색 배경 */
+            color: var(--text-dark);
+            padding: 20px;
         }
 
-        /* 스크롤바 숨기기 (선택 사항) */
-        ::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* 섹션 제목 스타일 */
-        .section-title {
-            position: relative;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 700; /* font-bold */
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 70%;
-            height: 4px;
-            background-color: var(--primary-color);
-            border-radius: 9999px;
-        }
-
-        /* 프로젝트 카드 호버 효과 */
-        .project-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        /* JavaScript로 활성화될 모달 스타일 */
-        .modal {
-            display: none; /* 초기에는 숨김 */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .modal-content {
-            margin: 5% auto;
-            padding: 30px;
+        .cv-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            /* 최소 높이를 설정하여 콘텐츠가 많아도 레이아웃이 유지되도록 함 */
+            min-height: 100vh; 
+            background-color: var(--bg-light);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
-            max-width: 90%;
-            background-color: #ffffff;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-            animation: slideDown 0.3s ease-out;
+            overflow: hidden;
         }
         
-        @keyframes slideDown {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* 메인 콘텐츠 영역의 타이틀 */
+        .main-section-title {
+            font-size: 1.75rem; /* text-3xl */
+            font-weight: 700;
+            color: var(--text-dark);
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            transition: color 0.2s;
+        /* 사이드바 항목 타이틀 */
+        .sidebar-title {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700;
+            color: var(--primary-color);
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid #d1d5db;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
         }
 
-        .close-btn:hover,
-        .close-btn:focus {
-            color: #3b82f6;
-            text-decoration: none;
-            cursor: pointer;
+        /* 스킬 바 스타일 (막대 그래프) */
+        .skill-bar-container {
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 6px; /* 높이 줄여 깔끔하게 */
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .skill-bar-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 1s ease-out;
         }
 
-        /* 반응형 모달 컨텐츠 */
+        /* 프로젝트 경험 항목 스타일 */
+        .experience-item {
+            margin-bottom: 2rem;
+        }
+        .experience-item h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        /* 리스트 스타일 조정 */
+        .content-list li {
+            margin-left: 1.25rem;
+            padding-left: 0.25rem;
+            line-height: 1.6;
+        }
+        .content-list {
+            list-style-type: disc;
+        }
+        
+        /* 수상 항목 스타일 */
+        .award-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px dotted #e5e7eb;
+        }
+        .award-item:last-child {
+            border-bottom: none;
+        }
+        .award-icon {
+            font-size: 1.5rem;
+            color: #f59e0b; /* 금색 계열로 포인트 */
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        .award-title {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .award-year {
+            font-size: 0.875rem;
+            color: var(--secondary-text);
+        }
+
+        /* 반응형 그리드 설정 */
         @media (min-width: 768px) {
-            .modal-content {
-                max-width: 700px;
+            .cv-grid {
+                grid-template-columns: 1fr 2fr; /* 좌측 1/3, 우측 2/3 비율 */
             }
         }
-
-        /* 헤더 고정 및 스크롤 시 그림자 추가 */
-        .header-scrolled {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        
+        /* ================================================= */
+        /* PDF 출력용 스타일 (Print CSS) */
+        /* ================================================= */
+        @media print {
+            body {
+                background-color: #fff !important; 
+                padding: 0 !important;
+            }
+            .cv-container {
+                box-shadow: none !important; 
+                border-radius: 0 !important;
+                min-height: auto !important;
+                max-width: 100% !important; 
+                width: 100% !important;
+                background-color: #ffffff !important; 
+            }
+            /* 2단 그리드 레이아웃을 유지 */
+            .cv-grid {
+                grid-template-columns: 1fr 2fr !important; /* 2-column 유지 */
+                display: grid !important; /* grid 속성 유지 */
+                width: 100% !important;
+            }
+            /* 사이드바를 보이도록 설정 */
+            aside {
+                display: block !important; 
+                background-color: #f3f4f6 !important; /* 사이드바 배경색 유지 */
+                border-right: 1px solid #ddd !important;
+                padding: 1.5rem !important;
+            }
+            main {
+                padding: 1.5rem !important; 
+            }
+            #printButton {
+                display: none !important; /* 버튼 숨김 */
+            }
+            
+            /* 인쇄 시 스타일 조정 */
+            .main-section-title {
+                border-bottom: 2px solid #ddd !important;
+                margin-top: 1rem !important;
+                color: #000 !important; /* 제목색을 검정으로 강제 */
+            }
+            .sidebar-title {
+                 color: #000 !important;
+                 border-bottom: 1px solid #ddd !important;
+            }
+            .experience-item {
+                margin-bottom: 1rem !important;
+                padding-bottom: 0.5rem;
+                page-break-inside: avoid; /* 섹션이 페이지를 넘어가지 않도록 방지 */
+            }
+            .award-item, .content-list li {
+                page-break-inside: avoid;
+            }
+            /* 아이콘 색상을 단순화 (브라우저 설정에 따라 다를 수 있음) */
+            .award-icon, .text-cyan-600 {
+                color: #000 !important; 
+            }
+            /* 프로젝트 성과 이미지 및 배경 제거 (인쇄를 깔끔하게) */
+            .experience-item .bg-cyan-50 {
+                background-color: #fff !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin-top: 0.5rem !important;
+            }
+            .experience-item img {
+                display: none; /* 이미지 숨김 */
+            }
+            .content-list strong {
+                 font-weight: 700 !important;
+            }
+            footer {
+                display: none; /* 푸터 숨김 */
+            }
         }
     </style>
 </head>
 <body class="scroll-smooth">
 
-    <!-- 1. 헤더/내비게이션 바 -->
-    <header id="main-header" class="bg-white p-4 sticky top-0 z-50 transition-all duration-300">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-extrabold text-gray-900">
-                <a href="#home" class="text-blue-600 hover:text-blue-800 transition duration-300">K.I.M. Portfolio</a>
-            </h1>
-            <nav class="hidden md:block">
-                <ul class="flex space-x-6">
-                    <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">소개</a></li>
-                    <li><a href="#skills" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">기술</a></li>
-                    <li><a href="#projects" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">프로젝트</a></li>
-                    <li><a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium transition duration-300">연락처</a></li>
-                </ul>
-            </nav>
-            <!-- 모바일 메뉴 버튼 -->
-            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md hover:bg-gray-100">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-            </button>
-        </div>
-        <!-- 모바일 메뉴 드롭다운 -->
-        <div id="mobile-menu" class="hidden md:hidden mt-4 bg-white rounded-lg shadow-lg">
-            <ul class="flex flex-col space-y-2 p-4">
-                <li><a href="#about" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">소개</a></li>
-                <li><a href="#skills" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">기술</a></li>
-                <li><a href="#projects" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">프로젝트</a></li>
-                <li><a href="#contact" class="block text-gray-700 hover:text-blue-600 font-medium py-2 transition duration-300">연락처</a></li>
-            </ul>
-        </div>
-    </header>
-
-    <main>
-        <!-- 2. 홈 섹션 (Hero Section) -->
-        <section id="home" class="bg-gray-50 py-20 md:py-32 flex items-center min-h-[60vh]">
-            <div class="container mx-auto px-6 text-center">
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-3xl mx-auto">
-                    <!-- Placeholder Image for Profile -->
-                    <!-- <img src="https://placehold.co/150x150/3b82f6/ffffff?text=나" onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=Profile'" alt="프로필 이미지" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-200"> -->
-                    
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
-                        안녕하세요, <span class="text-blue-600">프론트엔드 개발자</span> 김지환입니다.
-                    </h2>
-                    <p class="text-lg text-gray-600 mb-8">
-                        HTML, CSS, JavaScript를 활용한 사용자 중심의 웹 경험을 만듭니다.
-                    </p>
-                    <a href="#projects" class="inline-block bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105">
-                        작품 보러가기 →
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. 소개 섹션 (About Me) -->
-        <section id="about" class="py-20 md:py-28 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title text-gray-900">About Me</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-                    <div>
-                        <p class="text-gray-700 leading-relaxed mb-4">
-                            저는 웹 개발에 대한 깊은 열정을 가진 개발자입니다. 특히 사용자 경험(UX)을 개선하고, 깔끔하며 효율적인 코드를 작성하는 것에 주력합니다. 
-                            이번 포트폴리오는 **HTML, CSS, JavaScript**라는 웹의 기본 기술을 완벽하게 숙달했음을 보여드리기 위해 직접 제작했습니다.
-                        </p>
-                        <p class="text-gray-700 leading-relaxed">
-                            복잡한 문제에 직면했을 때, 체계적인 접근 방식으로 솔루션을 도출하는 것을 즐깁니다. 새로운 기술을 배우는 데 주저함이 없으며, 팀 프로젝트에서 시너지를 낼 수 있는 협업 능력을 중요하게 생각합니다.
-                        </p>
-                        <div class="mt-8 space-y-4">
-                            <div class="flex items-center">
-                                <span class="text-blue-600 font-bold mr-3">✔</span> 
-                                <span class="text-gray-800">HTML5와 CSS3에 대한 깊은 이해 및 숙련도</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="text-blue-600 font-bold mr-3">✔</span> 
-                                <span class="text-gray-800">Vanilla JavaScript를 활용한 동적 웹 구현 능력</span>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="text-blue-600 font-bold mr-3">✔</span> 
-                                <span class="text-gray-800">반응형 웹 디자인 (Mobile First 접근)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- About Section Placeholder Image -->
-                    <div class="hidden md:block bg-blue-50 p-6 rounded-xl shadow-inner">
-                        <img src="https://placehold.co/400x300/e0f2fe/1e40af?text=Developer+Workflow" alt="개발자 워크플로우 이미지" class="rounded-lg w-full h-full object-cover">
-                    </div>
-                </div>
-            </div>
-        </section>
+    <div class="cv-container">
         
-        <!-- 4. 기술 섹션 (Skills) -->
-        <section id="skills" class="py-20 md:py-28 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title text-gray-900">Skills</h2>
-                <p class="text-xl text-gray-600 mb-10">제가 주로 사용하는 기술 스택입니다.</p>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <!-- Skill Card: HTML -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
-                        <div class="text-5xl mb-3">🛠️</div>
-                        <h3 class="text-xl font-bold mb-2">HTML5</h3>
-                        <p class="text-gray-600">웹 표준 및 시맨틱 마크업</p>
-                    </div>
-                    <!-- Skill Card: CSS -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
-                        <div class="text-5xl mb-3">🎨</div>
-                        <h3 class="text-xl font-bold mb-2">CSS3</h3>
-                        <p class="text-gray-600">반응형, 애니메이션, Flexbox/Grid</p>
-                    </div>
-                    <!-- Skill Card: JavaScript -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
-                        <div class="text-5xl mb-3">🚀</div>
-                        <h3 class="text-xl font-bold mb-2">JavaScript</h3>
-                        <p class="text-gray-600">DOM 조작, 비동기 처리, ES6+</p>
-                    </div>
-                    <!-- Skill Card: Tooling -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-blue-300/50 transition duration-300">
-                        <div class="text-5xl mb-3">✨</div>
-                        <h3 class="text-xl font-bold mb-2">Git / GitHub</h3>
-                        <p class="text-gray-600">버전 관리 및 협업</p>
-                    </div>
+        <div class="cv-grid grid grid-cols-1 md:grid-cols-3">
+            
+            <!-- ====== 1. 좌측 사이드바 (Side Bar - 1/3) ====== -->
+            <aside class="md:col-span-1 bg-gray-50 p-6 md:p-8 border-r border-gray-200">
+                
+                <!-- 개인 정보 및 연락처 -->
+                <div class="mb-8">
+                    <img src="https://placehold.co/120x120/06b6d4/ffffff?text=김지환" onerror="this.src='https://placehold.co/120x120/06b6d4/ffffff?text=Profile'" alt="프로필 이미지" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-cyan-200">
+                    <h2 class="text-2xl font-extrabold text-center text-gray-900">김지환</h2>
+                    <p class="text-sm text-center text-gray-600">프론트엔드 개발자</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- 5. 프로젝트 섹션 (Projects) -->
-        <section id="projects" class="py-20 md:py-28 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title text-gray-900">Projects</h2>
-                <p class="text-xl text-gray-600 mb-10">직접 기획하고 개발한 주요 프로젝트들을 소개합니다.</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Project Card 1: 협업형 투두 리스트 -->
-                    <div class="project-card bg-gray-50 rounded-xl shadow-lg overflow-hidden" data-project="project1">
-                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Collaborative+ToDo+App" onerror="this.src='https://placehold.co/600x400/3b82f6/ffffff?text=Collaborative+ToDo+App'" alt="협업형 투두 리스트 이미지" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">협업형 투두 리스트</h3>
-                            <p class="text-gray-600 mb-4">CRUD 기능과 팀원 간 소통 기능을 구현한 공동 작업 관리 앱입니다.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Vanilla JS</span>
-                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">UX/UI</span>
-                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Data Management</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 2: 무한 반복 플레이리스트 -->
-                    <div class="project-card bg-gray-50 rounded-xl shadow-lg overflow-hidden" data-project="project2">
-                        <img src="https://placehold.co/600x400/10b981/ffffff?text=Music+Player+Demo" onerror="this.src='https://placehold.co/600x400/10b981/ffffff?text=Music+Player+Demo'" alt="무한 반복 플레이리스트 이미지" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">무한 반복 플레이리스트</h3>
-                            <p class="text-gray-600 mb-4">음악 추가 및 무한 반복 로직을 구현한 커스터마이징 가능한 웹 플레이어입니다.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Web Audio API</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">JS Logic</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project Card 3: 푸드트럭 부스 선정 투표 시스템 -->
-                    <div class="project-card bg-gray-50 rounded-xl shadow-lg overflow-hidden" data-project="project3">
-                        <img src="https://placehold.co/600x400/ef4444/ffffff?text=Voting+System+Demo" onerror="this.src='https://placehold.co/600x400/ef4444/ffffff?text=Voting+System+Demo'" alt="푸드트럭 부스 선정 투표 시스템 이미지" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">푸드트럭 부스 선정 투표 시스템</h3>
-                            <p class="text-gray-600 mb-4">부스 위치를 정하고 사용자 투표를 통해 최적의 위치를 선정하는 시스템입니다.</p>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Voting Logic</span>
-                                <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Dynamic UI</span>
-                            </div>
-                        </div>
-                    </div>
+                
+                <!-- 연락처 -->
+                <div>
+                    <h3 class="sidebar-title">CONTACT</h3>
+                    <ul class="text-sm space-y-2 text-gray-700">
+                        <li class="flex items-center space-x-2">
+                            <span class="text-cyan-600">📧</span>
+                            <a href="mailto:jihwan0204191@naver.com" class="hover:text-cyan-600">jihwan0204191@naver.com</a>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-cyan-600">📞</span>
+                            <span>(개인 연락처를 입력하세요)</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <span class="text-cyan-600">🔗</span>
+                            <a href="https://github.com/ArCaNa1" target="_blank" class="hover:text-cyan-600">GitHub.com/ArCaNa1</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </section>
 
-        <!-- 6. 연락처 섹션 (Contact) -->
-        <section id="contact" class="py-20 md:py-28 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <h2 class="section-title text-gray-900">Contact</h2>
-                <p class="text-xl text-gray-600 mb-10">함께 멋진 프로젝트를 만들어가고 싶습니다. 언제든지 연락 주세요!</p>
+                <!-- 기술 스택 (막대 그래프로 시각화) -->
+                <div>
+                    <h3 class="sidebar-title">TECHNICAL SKILLS</h3>
+                    
+                    <!-- Skill 1: HTML5 (95%) -->
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-gray-800 text-sm">HTML5 (웹 표준/시맨틱 마크업)</span>
+                            <span class="text-xs text-gray-500">95%</span>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
 
-                <div class="bg-white p-8 rounded-2xl shadow-xl max-w-lg mx-auto">
-                    <div class="space-y-6">
-                        <div class="flex items-center space-x-4">
-                            <span class="text-blue-600 text-2xl">📧</span>
+                    <!-- Skill 2: CSS3 (90%) -->
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-gray-800 text-sm">CSS3 (반응형/애니메이션)</span>
+                            <span class="text-xs text-gray-500">90%</span>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skill 3: Vanilla JavaScript (85%) -->
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-gray-800 text-sm">Vanilla JavaScript (ES6+/DOM)</span>
+                            <span class="text-xs text-gray-500">85%</span>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skill 4: Tooling (80%) -->
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-gray-800 text-sm">Git / GitHub (버전 관리/협업)</span>
+                            <span class="text-xs text-gray-500">80%</span>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skill 5: UX/UI (75%) -->
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="font-medium text-gray-800 text-sm">UX/UI (디자인 & 구현)</span>
+                            <span class="text-xs text-gray-500">75%</span>
+                        </div>
+                        <div class="skill-bar-container">
+                            <div class="skill-bar-fill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 비전 및 가치관 -->
+                <div>
+                    <h3 class="sidebar-title">VISION & MOTTO</h3>
+                    <p class="text-sm italic text-gray-600 leading-relaxed">
+                        "지속적인 성장을 통해 사용자에게 실질적인 가치를 제공하는 개발자가 되는 것."
+                    </p>
+                    <p class="text-sm italic font-bold text-gray-700 mt-2">
+                         #NeverStopLearning #CleanCode
+                    </p>
+                </div>
+
+            </aside>
+
+            <!-- ====== 2. 우측 메인 콘텐츠 (Main Content - 2/3) ====== -->
+            <main class="md:col-span-2 p-6 md:p-8">
+                
+                <!-- 핵심 요약 -->
+                <section>
+                    <h2 class="main-section-title">핵심 요약 (Profile Summary)</h2>
+                    
+                    <!-- 핵심 요약 -->
+                    <p class="text-gray-700 leading-relaxed text-base mb-4">
+                        저는 <strong>논리적 문제 해결 능력</strong>과 <strong>능동적인 팀워크</strong>를 핵심 가치로 삼는 프론트엔드 개발자입니다. 웹의 기본기(HTML, CSS, JavaScript)를 탄탄히 다져 복잡한 기능을 사용자 친화적인 형태로 구현하는 경험을 쌓았으며, 모든 경험을 통해 클린 코드 작성 습관을 형성했습니다.
+                    </p>
+                </section>
+
+                <!-- 대회 수상 이력 -->
+                <section>
+                    <h2 class="main-section-title">대회 수상 이력 (Awards & Recognition)</h2>
+                    
+                    <div class="space-y-2">
+                        <!-- 수상 1: 전국기능경기대회 은메달 -->
+                        <div class="award-item">
+                            <span class="award-icon">🥈</span>
                             <div>
-                                <h3 class="font-semibold text-gray-900">이메일</h3>
-                                <a href="mailto:jihwan0204191@naver.com" class="text-gray-600 hover:text-blue-600 transition duration-300">jihwan0204191@naver.com</a>
+                                <h4 class="award-title">전국기능경기대회 은메달 수상</h4>
+                                <p class="award-year">2020년도</p>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <span class="text-blue-600 text-2xl">🔗</span>
+                        
+                        <!-- 수상 2: 팀 챌린지 최우수상 -->
+                        <div class="award-item">
+                            <span class="award-icon">🥇</span>
                             <div>
-                                <h3 class="font-semibold text-gray-900">GitHub</h3>
-                                <a href="https://github.com/your-username" target="_blank" class="text-gray-600 hover:text-blue-600 transition duration-300">github.com/Arcanaa</a>
+                                <h4 class="award-title">팀 챌린지 최우수상</h4>
+                                <p class="award-year">2020년도</p>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <span class="text-blue-600 text-2xl">📝</span>
+                        
+                        <!-- 수상 3: 지방대회 동메달 -->
+                        <div class="award-item">
+                            <span class="award-icon">🥉</span>
                             <div>
-                                <h3 class="font-semibold text-gray-900">블로그/노션</h3>
-                                <a href="https://www.notion.so/111fc806e920801c8890e8952f11829f" target="_blank" class="text-gray-600 hover:text-blue-600 transition duration-300">jihwan0204191</a>
+                                <h4 class="award-title">지방기능경기대회 동메달 수상</h4>
+                                <p class="award-year">2019년도</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-    </main>
+                </section>
 
-    <!-- 7. 푸터 -->
-    <footer class="bg-gray-800 py-8">
-        <div class="container mx-auto px-6 text-center text-gray-400">
-            <p>&copy; 2025 kim jihwan Portfolio. All rights reserved.</p>
-            <p class="text-sm mt-2">Built with HTML, CSS (Tailwind), JavaScript.</p>
+                <!-- 교육 및 학력 -->
+                <section>
+                    <h2 class="main-section-title">교육 및 학력 (Education & Training)</h2>
+                    
+                    <div class="experience-item">
+                        <h3 class="text-gray-900">인하공업전문대학 컴퓨터 공학과 (졸업 예정)</h3>
+                        <p class="text-sm text-gray-500 mb-1">2021.03 ~ 2026.02 (졸업 예정)</p>
+                        <p class="text-gray-700">웹 프로그래밍, 자료구조, 데이터베이스 등 핵심 전공 이수. 평점 4.1/4.5.</p>
+                    </div>
+
+                    <div class="experience-item">
+                        <h3 class="text-gray-900">구름 풀스택 12회차 과정 이수</h3>
+                        <p class="text-sm text-gray-500 mb-1">2024.11 ~ 2025.06 (7개월)</p>
+                        <p class="text-gray-700">HTML5, CSS3, JavaScript 및 풀스택 개발 환경에 대한 집중 교육 이수. 팀/개인 프로젝트 5회 수행을 통해 실무 역량 강화.</p>
+                    </div>
+                </section>
+
+                <!-- 주요 경험 및 성과 -->
+                <section>
+                    <h2 class="main-section-title">주요 경험 및 성과 (Detailed Experience)</h2>
+
+                    <!-- 경험 1: 협업형 투두 리스트 -->
+                    <div class="experience-item">
+                        <h3 class="text-cyan-700">협업 관리 기능이 통합된 투두 리스트 앱 개발</h3>
+                        <p class="text-sm text-gray-500 mb-2">3주 팀 프로젝트 | Vanilla JavaScript, HTML, CSS</p>
+                        <ul class="content-list list-disc text-gray-700 leading-relaxed space-y-2">
+                            <li><strong>능동적 팀워크 발휘:</strong> CRUD 기능 외에 팀원 간의 할당 및 소통 기능을 설계하여 공동 작업의 효율성을 높이는 데 주도적인 역할을 수행했습니다. Git을 활용한 기능 분리 개발 및 코드 리뷰를 통해 체계적인 협업을 경험했습니다.</li>
+                            <li><strong>데이터 구조 설계:</strong> 다중 사용자 환경을 가정한 데이터 구조를 설계하고, 할 일 목록과 할당 상태를 효율적으로 관리하는 JavaScript 로직을 전담 구현했습니다.</li>
+                            <li><strong>핵심 역량:</strong> 팀워크, 커뮤니케이션, 논리적 문제 해결.</li>
+                        </ul>
+                        <!-- 성과: 이미지 + 글 -->
+                        <div class="mt-4 flex items-center bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                             <img src="https://placehold.co/120x80/06b6d4/ffffff?text=협업+UI" alt="협업형 투두 리스트 이미지" class="w-32 h-20 object-cover rounded-md mr-4">
+                            <div>
+                                <h4 class="font-semibold text-cyan-700">성과 상세</h4>
+                                <p class="text-sm text-gray-700">팀 프로젝트의 요구사항 분석 단계부터 참여하여, 기능적 복잡도를 최소화하는 데이터 분리 전략을 수립하고 기한 내 성공적으로 배포했습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 경험 2: 무한 반복 플레이리스트 -->
+                    <div class="experience-item">
+                        <h3 class="text-cyan-700">무한 순환 로직 기반의 웹 오디오 플레이어</h3>
+                        <p class="text-sm text-gray-500 mb-2">2주 개인 프로젝트 | Vanilla JavaScript (Audio Object), HTML, CSS</p>
+                        <ul class="content-list list-disc text-gray-700 leading-relaxed space-y-2">
+                            <li><strong>논리적 문제 해결:</strong> 오디오 객체의 `ended` 이벤트를 활용하여 다음 곡을 자동으로 로드하고 플레이리스트를 무한히 순환시키는 복잡한 로직을 직접 설계 및 구현했습니다.</li>
+                            <li><strong>기술 심화:</strong> HTML5 Audio 객체의 속성 및 이벤트를 직접 제어하여 재생 상태, 진행률 바, 볼륨 제어 등의 커스텀 UI를 완벽하게 동기화했습니다. 미디어 제어와 사용자 정의 UI를 동기화하는 비동기 처리 능력을 향상했습니다.</li>
+                            <li><strong>핵심 역량:</strong> 논리적 문제 해결, JavaScript 이벤트 처리, 기술 심화.</li>
+                        </ul>
+                        <!-- 성과: 이미지 + 글 -->
+                        <div class="mt-4 flex items-center bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                             <img src="https://placehold.co/120x80/06b6d4/ffffff?text=Player+UI" alt="플레이어 로직 이미지" class="w-32 h-20 object-cover rounded-md mr-4">
+                            <div>
+                                <h4 class="font-semibold text-cyan-700">성과 상세</h4>
+                                <p class="text-sm text-gray-700">복잡한 순환 로직을 깔끔하게 모듈화하여 코드의 재사용성과 유지보수성을 확보했으며, 자바스크립트 기반 미디어 제어에 자신감을 얻었습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 경험 3: 푸드트럭 부스 선정 투표 시스템 -->
+                    <div class="experience-item">
+                        <h3 class="text-cyan-700">사용자 투표 기반의 동적 위치 선정 시스템</h3>
+                        <p class="text-sm text-gray-500 mb-2">2주 팀 프로젝트 | Vanilla JavaScript (Dynamic Rendering), HTML, CSS</p>
+                        <ul class="content-list list-disc text-gray-700 leading-relaxed space-y-2">
+                            <li><strong>반응형 UX/UI 구현:</strong> 가상의 부스 지도 UI를 설계하고, 모바일 및 데스크톱 환경에서 모두 직관적으로 투표하고 결과를 확인할 수 있는 반응형 UI를 구현했습니다.</li>
+                            <li><strong>동적 데이터 처리:</strong> 사용자 투표 데이터가 변경될 때마다 순위와 부스 위치 정보를 지연 없이 실시간으로 업데이트하는 JavaScript 동적 렌더링 로직을 개발했습니다. 이는 데이터 변화에 따른 UI 효율성을 극대화한 경험입니다.</li>
+                            <li><strong>핵심 역량:</strong> 반응형 UX/UI 구현, 동적 데이터 연동, 문제 해결.</li>
+                        </ul>
+                         <!-- 성과: 이미지 + 글 -->
+                        <div class="mt-4 flex items-center bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                             <img src="https://placehold.co/120x80/06b6d4/ffffff?text=Voting+UI" alt="투표 시스템 이미지" class="w-32 h-20 object-cover rounded-md mr-4">
+                            <div>
+                                <h4 class="font-semibold text-cyan-700">성과 상세</h4>
+                                <p class="text-sm text-gray-700">시각적인 부스 지도와 투표 현황 시각화를 통해 사용자의 몰입도를 높였으며, 서비스의 비즈니스 로직(투표 공정성)을 고려한 UI 설계를 경험했습니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PDF 출력 버튼을 메인 콘텐츠 맨 아래에 배치 -->
+                    <div class="mt-10 pt-4 border-t border-gray-200 text-center">
+                        <button id="printButton" class="bg-cyan-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-cyan-700 transition duration-300 inline-flex items-center">
+                            <span class="mr-2">🖨️</span> PDF 문서로 저장 (인쇄)
+                        </button>
+                    </div>
+
+                </section>
+
+            </main>
         </div>
-    </footer>
-
-    <!-- 프로젝트 상세 정보 모달 (JavaScript로 내용 채움) -->
-    <div id="projectModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div id="modal-body">
-                <!-- Project details will be inserted here by JavaScript -->
-            </div>
-        </div>
+        
+        <!-- 푸터 (Footer) -->
+        <footer class="p-4 text-center text-gray-500 text-xs border-t border-gray-200">
+            &copy; 2025 김지환 웹 CV | 최종 업데이트: 2025.11.22
+        </footer>
     </div>
 
     <!-- JavaScript 로직 -->
     <script>
-        // 프로젝트 데이터 (JSON 형태로 상세 정보 관리)
-        const projectsData = {
-            project1: {
-                title: "협업형 투두 리스트 (팀 소통 기능)",
-                image: "https://placehold.co/600x400/3b82f6/ffffff?text=Collaborative+ToDo+App+Demo",
-                tech: "HTML5, CSS3, Vanilla JavaScript",
-                duration: "3주",
-                role: "기획, UI/UX 디자인, 프론트엔드 개발 100%",
-                description: `
-                    <p class="mb-4">개인 투두 관리를 넘어 팀원 간의 작업 공유와 소통을 지원하도록 기능을 확장한 반응형 웹 애플리케이션입니다. 사용자 경험(UX) 개선에 집중했습니다.</p>
-                    <h4 class="font-semibold mt-4 mb-2">주요 기능</h4>
-                    <ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">
-                        <li>할 일 추가/수정/삭제 (CRUD)</li>
-                        <li>**팀원 별 할 일 할당 및 상태 공유 기능** 구현</li>
-                        <li>**간단한 댓글 또는 메모 추가**를 통한 팀원 간의 소통 지원</li>
-                        <li>사용자 인증을 가정한 데이터 분리 및 관리 로직 구현</li>
-                    </ul>
-                    <h4 class="font-semibold mt-4 mb-2">배운 점</h4>
-                    <p class="text-gray-700">다중 사용자 환경을 가정한 데이터 구조 설계와, 복잡한 사용자 상호 작용을 효율적으로 처리하는 JavaScript 디자인 패턴을 적용했습니다.</p>
-                `
-            },
-            project2: {
-                title: "무한 반복 플레이리스트",
-                image: "https://placehold.co/600x400/10b981/ffffff?text=Music+Player+Demo",
-                tech: "HTML, CSS Animation, JavaScript (Web Audio API or Audio Object)",
-                duration: "2주",
-                role: "전체 개발",
-                description: `
-                    <p class="mb-4">사용자가 원하는 음악(mp3 등 로컬 파일 가정)을 추가하여 관리하고, 순차적 또는 무한 반복 재생할 수 있는 커스터마이징 가능한 웹 플레이어입니다.</p>
-                    <h4 class="font-semibold mt-4 mb-2">주요 기능</h4>
-                    <ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">
-                        <li>음악 파일 추가 및 리스트 관리 (Drag & Drop UI)</li>
-                        <li>재생/일시정지, 다음/이전 곡 이동</li>
-                        <li>**플레이리스트 무한 반복 및 셔플(Shuffle)** 재생 로직 구현</li>
-                        <li>진행률 바(Progress Bar) 및 볼륨 제어 UI</li>
-                    </ul>
-                    <h4 class="font-semibold mt-4 mb-2">배운 점</h4>
-                    <p class="text-gray-700">HTML5 Audio 객체를 이용한 미디어 제어 방법과, 사용자 정의 UI/UX를 미디어 기능과 동기화하는 JavaScript 로직을 깊이 있게 다루었습니다.</p>
-                `
-            },
-            project3: {
-                title: "푸드트럭 부스 선정 투표 시스템",
-                image: "https://placehold.co/600x400/ef4444/ffffff?text=Voting+System+Demo",
-                tech: "HTML, CSS (Geo-location UI), JavaScript (Voting Logic)",
-                duration: "2주",
-                role: "기획 및 프론트엔드 구현",
-                description: `
-                    <p class="mb-4">축제나 행사장에서 푸드트럭의 최적 부스 위치를 선정하기 위해 사용자들이 직접 투표할 수 있도록 설계된 웹 시스템의 프론트엔드 구현 프로젝트입니다.</p>
-                    <h4 class="font-semibold mt-4 mb-2">주요 기능</h4>
-                    <ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">
-                        <li>**가상 부스 위치 지도 UI** 표시 및 선택 기능</li>
-                        <li>각 부스에 대한 **투표 기능** (중복 투표 방지 로직 가정)</li>
-                        <li>**실시간 투표 결과 업데이트** 및 순위 표시</li>
-                        <li>투표 마감 후 최종 선정 부스 애니메이션 표시</li>
-                    </ul>
-                    <h4 class="font-semibold mt-4 mb-2">배운 점</h4>
-                    <p class="text-gray-700">데이터 변화에 따라 사용자 인터페이스(UI)를 동적으로 업데이트하는 반응형 프로그래밍 패턴을 연습했으며, 공정한 투표 시스템 로직을 구축하는 방법을 이해했습니다.</p>
-                `
-            }
-        };
-
-        // DOM 요소 가져오기
-        const modal = document.getElementById('projectModal');
-        const modalBody = document.getElementById('modal-body');
-        const closeBtn = document.querySelector('.close-btn');
-        const projectCards = document.querySelectorAll('.project-card');
-        const mainHeader = document.getElementById('main-header');
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        // 1. 헤더 스크롤 이벤트 (그림자 추가)
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                mainHeader.classList.add('header-scrolled');
-            } else {
-                mainHeader.classList.remove('header-scrolled');
-            }
+        // PDF 출력 버튼 이벤트 리스너
+        document.getElementById('printButton').addEventListener('click', () => {
+            // 브라우저의 기본 인쇄 대화 상자를 호출합니다.
+            // 인쇄 대화 상자에서 'PDF로 저장'을 선택하면 PDF 파일로 저장됩니다.
+            window.print();
         });
-
-        // 2. 모바일 메뉴 토글
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // 모바일 메뉴 링크 클릭 시 메뉴 닫기 (사용자 편의성)
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // 3. 모달 열기 함수
-        function openModal(projectId) {
-            const data = projectsData[projectId];
-            if (!data) return;
-
-            // 모달 내용 생성
-            modalBody.innerHTML = `
-                <h2 class="text-3xl font-extrabold text-blue-600 mb-4">${data.title}</h2>
-                <img src="${data.image}" alt="${data.title} 데모 이미지" class="w-full h-auto rounded-lg mb-4 object-cover border border-gray-200">
-                <div class="grid grid-cols-2 gap-4 text-sm mb-6">
-                    <div>
-                        <span class="font-semibold text-gray-700">사용 기술:</span> ${data.tech}
-                    </div>
-                    <div>
-                        <span class="font-semibold text-gray-700">기간:</span> ${data.duration}
-                    </div>
-                    <div class="col-span-2">
-                        <span class="font-semibold text-gray-700">역할:</span> ${data.role}
-                    </div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">프로젝트 상세</h3>
-                <div class="text-gray-800 leading-relaxed">${data.description}</div>
-                <div class="mt-6 text-center">
-                    <!-- 실제 링크로 교체 필요 -->
-                    <a href="#" target="_blank" class="inline-block bg-blue-600 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 mr-4">
-                        🌐 데모 보기
-                    </a>
-                    <a href="#" target="_blank" class="inline-block bg-gray-700 text-white font-medium py-2 px-6 rounded-lg hover:bg-gray-800 transition duration-300">
-                        💻 GitHub
-                    </a>
-                </div>
-            `;
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; // 스크롤 잠금
-        }
-
-        // 4. 모달 닫기 함수
-        function closeModal() {
-            modal.style.display = 'none';
-            document.body.style.overflow = ''; // 스크롤 해제
-        }
-
-        // 5. 프로젝트 카드 클릭 이벤트 리스너 설정
-        projectCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const projectId = card.getAttribute('data-project');
-                openModal(projectId);
-            });
-        });
-
-        // 6. 닫기 버튼 (X) 클릭 이벤트
-        closeBtn.addEventListener('click', closeModal);
-
-        // 7. 모달 바깥 영역 클릭 이벤트 (모달 닫기)
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-
-        // 8. 키보드 ESC 키로 모달 닫기
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && modal.style.display === 'block') {
-                closeModal();
-            }
-        });
-
     </script>
 </body>
 </html>
